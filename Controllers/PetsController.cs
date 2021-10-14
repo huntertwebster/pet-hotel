@@ -15,25 +15,21 @@ namespace pet_hotel.Controllers
     public class PetsController : ControllerBase
     {
         private readonly ApplicationContext _context;
-        public PetsController(ApplicationContext context)
+        private readonly ILogger<PetsController> _logger;
+        public PetsController(ApplicationContext context, ILogger<PetsController> logger)
         {
+            _logger = logger;
             _context = context;
         }
 
         // GET pets by ID
-        [HttpGet("{id")]
+        [HttpGet("{id}")]
         // GET /api/PetInventory/10 -- to get single bread entry with id of 10
         public PetInventory GetPetByID(int id)
         {
             return _context.PetInventory.Find(id);
         }
 
-        // GET all pets - safety net 
-        [HttpGet]
-        public IEnumerable<PetInventory> GetPets()
-        {
-            return new List<PetInventory>();
-        }
 
         // GET all pets
         [HttpGet] // respond to the GET at this route --> /
@@ -61,10 +57,17 @@ namespace pet_hotel.Controllers
             return NoContent();
         }
 
-        // POST
+        // POST - create a new pet
         [HttpPost]
-        public IActionResult createPet([FromBody] PetInventory pet)
+        public IActionResult CreatePet([FromBody] PetInventory pet)
         {
+            _logger.LogInformation($"Here is the owner id: {pet.petOwnerid}");
+            var petOwner = _context.PetOwners.Find(pet.petOwnerid);
+            if (petOwner == null)
+            {
+                ModelState.AddModelError("petOwnerid", "HEY YOU DONT HAVE A PET OWNER ID");
+                return ValidationProblem(ModelState);
+            }
             _context.PetInventory.Add(pet);
             _context.SaveChanges();
 
@@ -73,30 +76,89 @@ namespace pet_hotel.Controllers
             // return Ok(); // TODO: return HTTP 201 Created
         }
 
+        // PUT - CHECK In 
+        [HttpPut("{id}/checkin")]
+        public object doCheckin(int id)
+        {
+            PetInventory pet = _context.PetInventory.SingleOrDefault(p => p.id == id);
+            if (pet == null)
+            {
+                System.Console.WriteLine("Pet Not Found");
+                return NotFound();
+            }
+            // how do we checkin the pet?
+            pet.increase();
+            _context.Update(pet); // mark as updated
+            _context.SaveChanges(); // run SQL update command
+
+            return pet;
+        }
+
+
+        // PUT - CHECK OUT
+        [HttpPut("{id}/checkout")]
+        public object doCheckOut(int id)
+        {
+            PetInventory pet = _context.PetInventory.SingleOrDefault(p => p.id == id);
+            if (pet == null)
+            {
+                System.Console.WriteLine("Pet Not Found");
+                return NotFound();
+            }
+            // how do we checkin the pet?
+            pet.decrease();
+            _context.Update(pet); // mark as updated
+            _context.SaveChanges(); // run SQL update command
+
+            return pet;
+        }
+
+        // PUT a petOwner
+        [HttpPut("{id}")]
+        public object editOwner(int id, [FromBody] PetInventory potentialPet)
+        {
+            PetInventory pet = _context.PetInventory.Find(id);
+            if (pet == null)
+            {
+                System.Console.WriteLine("Pet Not Found");
+                return NotFound();
+            }
+            // how do we checkin the pet?
+            pet.name = potentialPet.name;
+            _context.Update(pet); // mark as updated
+            _context.SaveChanges(); // run SQL update command
+
+            return pet;
+        }
+
 
 
         // [HttpGet]
         // [Route("test")]
-        // public IEnumerable<Pet> GetPets() {
-        //     PetOwner blaine = new PetOwner{
+        // public IEnumerable<PetInventory> GetPets()
+        // {
+        //     PetOwner blaine = new PetOwner
+        //     {
         //         name = "Blaine"
         //     };
 
-        //     Pet newPet1 = new Pet {
+        //     PetInventory newPet1 = new PetInventory
+        //     {
         //         name = "Big Dog",
-        //         petOwner = blaine,
+        //         PetOwner = blaine,
         //         color = PetColorType.Black,
         //         breed = PetBreedType.Poodle,
         //     };
 
-        //     Pet newPet2 = new Pet {
+        //     PetInventory newPet2 = new PetInventory
+        //     {
         //         name = "Little Dog",
-        //         petOwner = blaine,
+        //         PetOwner = blaine,
         //         color = PetColorType.Golden,
         //         breed = PetBreedType.Labrador,
         //     };
 
-        //     return new List<Pet>{ newPet1, newPet2};
+        //     return new List<PetInventory> { newPet1, newPet2 };
         // }
     }
 }

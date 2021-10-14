@@ -43,7 +43,19 @@ namespace pet_hotel
         public PetOwner ownedBy { get; set; }
         // lets us see the pet owner id when we POST a new pet
         [Required]
-        [ForeignKey("PetOwner")]
-        public int ownedByid { get; set; }
+        [ForeignKey("PetOwners")]
+        public int petOwnerid { get; set; }
+
+        public int petCount { get; set; }
+
+        public void increase()
+        {
+            this.checkedInAt = DateTime.Now;
+        }
+
+        public void decrease()
+        {
+            this.checkedInAt = null;
+        }
     }
 }

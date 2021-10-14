@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace dotnet_bakery.Migrations
 {
-    public partial class CreateOwnerTable : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,23 +32,24 @@ namespace dotnet_bakery.Migrations
                     breed = table.Column<int>(type: "integer", nullable: false),
                     color = table.Column<int>(type: "integer", nullable: false),
                     checkedInAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    ownedByid = table.Column<int>(type: "integer", nullable: false)
+                    petOwnerid = table.Column<int>(type: "integer", nullable: false),
+                    petCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PetInventory", x => x.id);
                     table.ForeignKey(
-                        name: "FK_PetInventory_PetOwners_ownedByid",
-                        column: x => x.ownedByid,
+                        name: "FK_PetInventory_PetOwners_petOwnerid",
+                        column: x => x.petOwnerid,
                         principalTable: "PetOwners",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PetInventory_ownedByid",
+                name: "IX_PetInventory_petOwnerid",
                 table: "PetInventory",
-                column: "ownedByid");
+                column: "petOwnerid");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

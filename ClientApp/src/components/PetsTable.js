@@ -22,7 +22,7 @@ class PetsTable extends Component {
 
    renderTable = () => {
       return (
-         <div class="table-responsive">
+         <div className="table-responsive">
             <table className='table table-striped table-bordered table-hover' aria-labelledby="tabelLabel">
                <thead>
                   <tr>
@@ -45,7 +45,7 @@ class PetsTable extends Component {
                            ? moment.utc(pet.checkedInAt).local().calendar()
                            : 'Not Checked In'}
                         </td>
-                        <td>{pet.petOwner.name}</td>
+                        <td>{pet.ownedBy.name}</td>
                         <td>
                            {pet.checkedInAt
                               ? <button onClick={() => this.checkOut(pet.id)} className='btn btn-sm btn-info ml-1 mr-1'>check out</button>

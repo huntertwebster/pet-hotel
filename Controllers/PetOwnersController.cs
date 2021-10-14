@@ -17,14 +17,6 @@ namespace pet_hotel.Controllers
             _context = context;
         }
 
-        // This is just a stub for GET / to prevent any weird frontend errors that 
-        // occur when the route is missing in this controller
-        [HttpGet]
-        public IEnumerable<PetOwner> GetPets()
-        {
-            return new List<PetOwner>();
-        }
-
         // GET all owners
         [HttpGet]
         public List<PetOwner> GetOwners()
@@ -68,6 +60,27 @@ namespace pet_hotel.Controllers
 
             // return Ok(); // Returns HTTP 200 OK
             return NoContent(); // Returns HTTP 204
+        }
+
+
+
+
+        // PUT a petOwner
+        [HttpPut("{id}")]
+        public object editOwner(int id, [FromBody] PetOwner potentialPetOwner)
+        {
+            PetOwner owner = _context.PetOwners.Find(id);
+            if (owner == null)
+            {
+                System.Console.WriteLine("PetOwner Not Found");
+                return NotFound();
+            }
+            // how do we checkin the pet?
+            owner.name = potentialPetOwner.name;
+            _context.Update(owner); // mark as updated
+            _context.SaveChanges(); // run SQL update command
+
+            return owner;
         }
 
     } // end of public class

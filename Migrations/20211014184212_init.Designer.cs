@@ -10,8 +10,8 @@ using pet_hotel.Models;
 namespace dotnet_bakery.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20211014144620_CreateOwnerTable")]
-    partial class CreateOwnerTable
+    [Migration("20211014184212_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,12 +41,15 @@ namespace dotnet_bakery.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ownedByid")
+                    b.Property<int>("petCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("petOwnerid")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
-                    b.HasIndex("ownedByid");
+                    b.HasIndex("petOwnerid");
 
                     b.ToTable("PetInventory");
                 });
@@ -75,7 +78,7 @@ namespace dotnet_bakery.Migrations
                 {
                     b.HasOne("pet_hotel.PetOwner", "ownedBy")
                         .WithMany("pets")
-                        .HasForeignKey("ownedByid")
+                        .HasForeignKey("petOwnerid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
