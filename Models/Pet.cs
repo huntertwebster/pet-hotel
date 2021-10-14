@@ -23,7 +23,7 @@ namespace pet_hotel
         Tricolor, // 3
         Spotted   // 4
     }
-    public class Pets
+    public class PetInventory
     {
         // (id), name, breed, color, checked In, Pet Owner
         // id

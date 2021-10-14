@@ -17,7 +17,7 @@ namespace pet_hotel
         public string emailAddress { get; set; }
         // Pets ( joined like the bakedby )
         [JsonIgnore]
-        public List<Pets> pets { get; set; }
+        public List<PetInventory> pets { get; set; }
         // Special Function: Grabs number? of all pets that this owner has
         [NotMapped]
         public int petCount

@@ -20,13 +20,60 @@ namespace pet_hotel.Controllers
             _context = context;
         }
 
-        // This is just a stub for GET / to prevent any weird frontend errors that 
-        // occur when the route is missing in this controller
-        [HttpGet]
-        public IEnumerable<Pets> GetPets()
+        // GET pets by ID
+        [HttpGet("{id")]
+        // GET /api/PetInventory/10 -- to get single bread entry with id of 10
+        public PetInventory GetPetByID(int id)
         {
-            return new List<Pets>();
+            return _context.PetInventory.Find(id);
         }
+
+        // GET all pets - safety net 
+        [HttpGet]
+        public IEnumerable<PetInventory> GetPets()
+        {
+            return new List<PetInventory>();
+        }
+
+        // GET all pets
+        [HttpGet] // respond to the GET at this route --> /
+        public List<PetInventory> GetPet()
+        {
+            // this includes asks donet to run the appropraite JOIN requests to join the pets table 
+            return _context.PetInventory.Include(p => p.ownedBy).OrderBy(pet => pet.ownedBy).ToList();
+        }
+
+        // DELETE
+        [HttpDelete("{id}")] // route --> /api/PetInventory/:id
+
+        public IActionResult deletePet(int id)
+        {
+            PetInventory p = _context.PetInventory.Find(id);
+            if (p == null)
+            {
+                // if the id is invalid return a 404 not found.
+                return NotFound();
+            }
+            // Actually delete the pet
+            _context.PetInventory.Remove(p); // marks it for deletion
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        // POST
+        [HttpPost]
+        public IActionResult createPet([FromBody] PetInventory pet)
+        {
+            _context.PetInventory.Add(pet);
+            _context.SaveChanges();
+
+            // fancy way of returning true HTTP 201, including a URL of where to get the owner
+            return CreatedAtAction(nameof(GetPetByID), new { id = pet.id }, pet);
+            // return Ok(); // TODO: return HTTP 201 Created
+        }
+
+
 
         // [HttpGet]
         // [Route("test")]

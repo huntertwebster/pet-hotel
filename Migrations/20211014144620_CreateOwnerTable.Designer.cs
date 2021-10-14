@@ -10,7 +10,7 @@ using pet_hotel.Models;
 namespace dotnet_bakery.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20211014141911_CreateOwnerTable")]
+    [Migration("20211014144620_CreateOwnerTable")]
     partial class CreateOwnerTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,27 +21,7 @@ namespace dotnet_bakery.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("pet_hotel.PetOwner", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("emailAddress")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.ToTable("PetOwners");
-                });
-
-            modelBuilder.Entity("pet_hotel.Pets", b =>
+            modelBuilder.Entity("pet_hotel.PetInventory", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -68,10 +48,30 @@ namespace dotnet_bakery.Migrations
 
                     b.HasIndex("ownedByid");
 
-                    b.ToTable("Pets");
+                    b.ToTable("PetInventory");
                 });
 
-            modelBuilder.Entity("pet_hotel.Pets", b =>
+            modelBuilder.Entity("pet_hotel.PetOwner", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("emailAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("PetOwners");
+                });
+
+            modelBuilder.Entity("pet_hotel.PetInventory", b =>
                 {
                     b.HasOne("pet_hotel.PetOwner", "ownedBy")
                         .WithMany("pets")

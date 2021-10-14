@@ -23,7 +23,7 @@ namespace dotnet_bakery.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pets",
+                name: "PetInventory",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -36,9 +36,9 @@ namespace dotnet_bakery.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pets", x => x.id);
+                    table.PrimaryKey("PK_PetInventory", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Pets_PetOwners_ownedByid",
+                        name: "FK_PetInventory_PetOwners_ownedByid",
                         column: x => x.ownedByid,
                         principalTable: "PetOwners",
                         principalColumn: "id",
@@ -46,15 +46,15 @@ namespace dotnet_bakery.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pets_ownedByid",
-                table: "Pets",
+                name: "IX_PetInventory_ownedByid",
+                table: "PetInventory",
                 column: "ownedByid");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Pets");
+                name: "PetInventory");
 
             migrationBuilder.DropTable(
                 name: "PetOwners");
