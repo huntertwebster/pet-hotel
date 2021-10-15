@@ -42,6 +42,16 @@ namespace pet_hotel
         // Who owns the pet?
         public PetOwner ownedBy { get; set; }
         // lets us see the pet owner id when we POST a new pet
+        [NotMapped]
+        public PetOwner petOwner
+        {
+            get
+            {
+                return this.ownedBy;
+            }
+        }
+        public int age { get; set; }
+
         [Required]
         [ForeignKey("PetOwners")]
         public int petOwnerid { get; set; }
@@ -50,7 +60,7 @@ namespace pet_hotel
 
         public void increase()
         {
-            this.checkedInAt = DateTime.Now;
+            this.checkedInAt = DateTime.UtcNow;
         }
 
         public void decrease()

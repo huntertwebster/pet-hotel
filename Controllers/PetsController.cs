@@ -36,7 +36,7 @@ namespace pet_hotel.Controllers
         public List<PetInventory> GetPet()
         {
             // this includes asks donet to run the appropraite JOIN requests to join the pets table 
-            return _context.PetInventory.Include(p => p.ownedBy).OrderBy(pet => pet.ownedBy).ToList();
+            return _context.PetInventory.Include(p => p.ownedBy).OrderBy(pet => pet.name).ToList();
         }
 
         // DELETE
